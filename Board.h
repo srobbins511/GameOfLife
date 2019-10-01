@@ -6,17 +6,20 @@ class Board
 {
     public:
         //variables
-        char **myArr;
+        bool **myArr;
         int len;
         int width;
         int numElems;
 
         Board();
-        Board(int gLen, int gWidth, int density);
+        Board(int gLen, int gWidth, double density);
+        Board(int gLen, int gWidth);
+        Board(int gLen, int gWidth, std::string content);
         Board(Board* startBoard);
         ~Board();
-        bool getElem(int index);
-        void Flip(int index);
+        bool getElem(int iPos, int jPos);
+        bool isEmpty();
+        void Set(int i, int j, bool state);
         int getLen();
         int getWidth();
         std::string printBoard();
