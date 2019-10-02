@@ -6,7 +6,7 @@ class Board
 {
     public:
         //variables
-        bool **myArr;
+        char **myArr;
         int len;
         int width;
         int numElems;

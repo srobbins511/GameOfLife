@@ -43,7 +43,6 @@ Game::Game(int rules, int gLen, int gWidth, std::string content)
     gameBoard = new Board(len, width, content);
     cout << "created Game Board" << endl;
     nextBoard = new Board(len, width);
-    cout << "created game Board" << endl;
 }
 
 Game::~Game()
@@ -213,7 +212,7 @@ int Game::DonutCheck(int i, int j)
                     ++neighborCount;
                 }
             }
-            if(gameBoard->getElem(i+k,j+l))
+            else if(gameBoard->getElem(i+k,j+l))
             {
                 ++neighborCount;
             }
@@ -222,8 +221,9 @@ int Game::DonutCheck(int i, int j)
     return neighborCount;
 }
 
-int Game::flipPosI(int i)
+int Game::flipPosI(int posi)
 {
+    int i = posi;
     if(i < 0)
     {
         i = len-1;
@@ -234,8 +234,9 @@ int Game::flipPosI(int i)
     return i;
 }
 
-int Game::flipPosJ(int j)
+int Game::flipPosJ(int posj)
 {
+    int j = posj;
     if(j < 0)
     {
         j = width-1;
@@ -248,6 +249,7 @@ int Game::flipPosJ(int j)
 
 void Game::NextGeneration()
 {
+    nextBoard = new Board(gameBoard);
     for(int i = 0; i<len; ++i)
     {
         for(int j = 0; j<width; ++j)
@@ -263,4 +265,68 @@ void Game::NextGeneration()
 std::string Game::printBoard()
 {
     return gameBoard->printBoard();
+}
+
+bool Game::Compare()
+{
+    bool same = true;
+    int iCountCur = 0;
+    int iCountNext = 0;
+    int jCountCur = 0;
+    int jCountNext = 0;
+    int *checksumsICur = new int[len];
+    int *checksumsINext = new int[len];
+    int *checksumsJCur = new int[width];
+    int *checksumsJNext = new int[width];
+    for(int i = 0; i < len; i++)
+    {
+        for(int j = 0; j < width; j++)
+        {
+            if(gameBoard->getElem(i,j) != nextBoard->getElem(i,j))
+            {
+                same = false;
+            }
+            if(gameBoard->getElem(i,j))
+            {
+                iCountCur++;
+            }
+            if(nextBoard->getElem(i,j))
+            {
+                iCountNext++;
+            }
+        }
+        checksumsICur[i] = iCountCur;
+        checksumsINext[i] = iCountNext;
+    }
+    for(int j = 0; j < width; j++)
+    {
+        for(int i = 0; i < len; i++)
+        {
+            if(gameBoard->getElem(i,j))
+            {
+                jCountCur++;
+            }
+            if(nextBoard->getElem(i,j))
+            {
+                jCountNext++;
+            }
+        }
+        checksumsJCur[j] = jCountCur;
+        checksumsJNext[j] = jCountNext;
+    }
+    for(int i = 0; i < len; ++i)
+    {
+        if(checksumsICur[i] != checksumsINext[i])
+        {
+            same = false;
+        }
+    }
+    for(int j = 0; j < width; ++j)
+    {
+        if(checksumsJCur[j] != checksumsJNext[j])
+        {
+            same = false;
+        }
+    }
+    return same;
 }

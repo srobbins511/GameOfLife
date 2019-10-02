@@ -12,10 +12,10 @@ class FileInput
         bool success;
 
         FileInput(std::string fname);
-        ~FileInput();
         bool completed();
         int getLength();
         int getWidth();
         std::string getContent();
         void Format();
+        int atoi(std::string num);
 };

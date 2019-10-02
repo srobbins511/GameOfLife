@@ -6,10 +6,10 @@ using namespace std;
 
 Board::Board()
 {
-    myArr = new bool*[10];
+    myArr = new char*[10];
     for(int i = 0; i < 10; ++i)
     {
-        myArr[i] = new bool[10];
+        myArr[i] = new char[10];
     }
     len = 10;
     width = 10;
@@ -21,38 +21,50 @@ Board::Board(int gLen, int gWidth, double density)
     len = gLen;
     width = gWidth;
     numElems = len*width;
-    myArr = new bool*[len];
+    myArr = new char*[len];
     for(int i = 0; i < len; ++i)
     {
-        myArr[i] = new bool[width];
+        myArr[i] = new char[width];
     }
     //Code how to use density to create a random distribution of living locations
-    
+    for(int i = 0; i< len; ++i)
+    {
+        for(int j = 0; j < width; ++j)
+        {
+            double randA = rand()/(double)RAND_MAX;
+            if(randA < density)
+            {
+                myArr[i][j] = 'X';
+            }
+            else{
+                myArr[i][j] = '-';
+            }
+        }
+    }
 }
 
 Board::Board(int gLen, int gWidth, std::string content)
 {
     len = gLen;
     width = gWidth;
-    cout << " create array" << endl;
-    myArr = new bool*[len];
-    cout << "start making array 2d" << endl;
+    myArr = new char*[len];
     for(int i = 0; i < len; ++i)
     {
-        myArr[i] = new bool[width];
+        myArr[i] = new char[width];
     }
-    int i = 0;
+    int i = -1;
     int j = 0;
     for(char c : content)
     {
         if(c=='|')
         {
-            ++i;
+            i++;
+            j = 0;
         }
-        else if(c == 'X'|| c == '-')
+        else if(c=='X' || c== '-')
         {
-            myArr[i][j++] = true;
-            cout << c << endl;
+            myArr[i][j] = c;
+            j++;
         }
         else
         {
@@ -68,14 +80,10 @@ Board::Board(int gLen, int gWidth)
     width = gWidth;
     numElems = len*width;
     cout << "Creating second game board" << endl;
-    myArr = new bool*[len];
+    myArr = new char*[len];
     for(int i = 0; i < len; ++i)
     {
-        myArr[i] = new bool[width];
-        for(int j = 0; j < width; ++j)
-        {
-            myArr[i][j] = false;
-        }
+        myArr[i] = new char[width];
     }
 }
 
@@ -84,10 +92,10 @@ Board::Board(Board* startBoard)
     len = startBoard->len;
     width = startBoard->width;
     numElems = startBoard->numElems;
-    myArr = new bool*[len];
+    myArr = new char*[len];
     for(int i = 0; i < len; ++i)
     {
-        myArr[i] = new bool[width];
+        myArr[i] = new char[width];
     }
     for(int i = 0; i<len; ++i)
     {
@@ -100,13 +108,21 @@ Board::Board(Board* startBoard)
 
 Board::~Board()
 {
+    for(int i=0; i<len; ++i)
+    {
+        delete [] myArr[i];
+    }
     delete myArr;
 }
 
 //if value is X return true that the element at that location is alive
 bool Board::getElem(int i, int j)
 {
-    return myArr[i][j];
+    if(myArr[i][j] == 'X')
+    {
+        return true;
+    }
+    return false;
 }
 
 bool Board::isEmpty()
@@ -115,7 +131,7 @@ bool Board::isEmpty()
     {
         for(int j = 0; i < width; ++j)
         {
-            if(myArr[i][j])
+            if(myArr[i][j] == 'X')
             {
                 return false;
             }
@@ -126,7 +142,14 @@ bool Board::isEmpty()
 
 void Board::Set(int i, int j, bool state)
 {
-    myArr[i][j]= state;
+    if(state)
+    {
+        myArr[i][j] = 'X';
+    }
+    else
+    {
+        myArr[i][j]= '-';
+    }
 }
 
 int Board::getLen()
@@ -146,14 +169,7 @@ std::string Board::printBoard()
     {
         for(int j = 0; j<width; ++j)
         {
-            if(myArr[i][j])
-            {
-                temp+='X';
-            }
-            else
-            {
-                temp+='-';
-            }
+            temp += myArr[i][j];
         }
         temp += "\n";
     }

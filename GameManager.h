@@ -3,6 +3,7 @@
 #include <math.h>
 #include "Game.h"
 #include "FileInput.h"
+#include "FileOutput.h"
 
 
 class GameManager
@@ -14,12 +15,14 @@ class GameManager
         int len;
         int width;
         double density;
+        int simCount;
         FileInput *myFile;
+        std::string fname;
 
         GameManager();
         ~GameManager();
         void play();
-        bool Stabalized();
+        bool Similarity();
         bool UserInput();
         bool getValues();
 };

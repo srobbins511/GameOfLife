@@ -1,10 +1,15 @@
 #include "GameManager.h"
+#include "stdlib.h"
+#include <chrono>
+#include <thread>
 
 
 using namespace std;
+using namespace std::chrono_literals;
 
 GameManager::GameManager()
 {
+    simCount = 0;
     if(!UserInput())
     {
         exit(EXIT_FAILURE);
@@ -19,12 +24,63 @@ GameManager::~GameManager()
 
 void GameManager::play()
 {
-    for(int i = 0; i<10; i++)
+    int count = 1;
+    while(!Similarity())
     {
-        cout << myGame->printBoard();
-        myGame->NextGeneration();
+        switch(OutputCode)
+        {
+            case 1:
+                cout << count << endl;
+                cout << myGame->printBoard() <<endl;
+                myGame->NextGeneration();
+                std::this_thread::sleep_for(2s);
+                break;
+            case 2:
+                cout << count << endl;
+                cout << myGame->printBoard() <<endl;
+                myGame->NextGeneration();
+                cin.get();
+                break;
+            case 3:
+                myGame->NextGeneration();
+                FileOutput *outPut = new FileOutput(fname);
+                if(count == 1)
+                {
+                    outPut -> Clear();
+                }
+                if(!outPut->Check())
+                {
+                    cout << "File not correctly opened" << endl;
+                    exit(EXIT_FAILURE);
+                }
+                std::string temp = "" + count;
+                outPut->Push(temp);
+                outPut->Push(myGame->printBoard());
+                delete outPut;
+                break;
+        }
+        count++;
     }
 }
+
+bool GameManager::Similarity()
+{
+    if(myGame->Compare())
+    {
+        simCount++;
+    }
+    else
+    {
+        simCount = 0;
+    }
+
+    if(simCount >=5)
+    {
+        return true;
+    }
+    return false;
+}
+
 
 bool GameManager::getValues()
 {
@@ -118,7 +174,6 @@ bool GameManager::UserInput()
         if(temp == "M" || temp == "m")
         {
             bool complete = false;
-            std::string fname;
             while(!complete)
             {
                 cout << "enter the name of the file, if the file does not exist in the current directory enter the PATH with it: " << endl;
@@ -174,9 +229,9 @@ bool GameManager::UserInput()
         {
             exit = true;
             OutputCode = 3;
-        }
-        else{
-            cout << "Incorrect Input" << endl;
+            bool finish = false;
+            cout << "enter the name of the file, if the file does not exist in the current directory enter the PATH with it: " << endl;
+            cin >> fname;
         }
     }
     return true;

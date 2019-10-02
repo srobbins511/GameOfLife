@@ -31,4 +31,5 @@ class Game
         int ClassicCheck(int i, int j);
         int DonutCheck(int i, int j);
         void NextGeneration();
+        bool Compare();
 };

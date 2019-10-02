@@ -27,8 +27,54 @@ FileInput::FileInput(std::string fname)
     success = true;
 }
 
-FileInput::~FileInput()
+int FileInput::atoi(std::string num)
 {
+    int number = 0;
+    for(char c : num)
+    {
+        number*=10;
+        if(c == '9')
+        {
+            number+=9;
+        }
+        else if(c == '8')
+        {
+            number+=8;
+        }
+        else if(c == '7')
+        {
+            number+=7;
+        }
+        else if(c == '6')
+        {
+            number+=6;
+        }
+        else if(c == '5')
+        {
+            number+=5;
+        }
+        else if(c == '4')
+        {
+            number+=4;
+        }
+        else if(c == '3')
+        {
+            number+=3;
+        }
+        else if(c == '2')
+        {
+            number+=2;
+        }
+        else if(c == '1')
+        {
+            number+=1;
+        }
+        else if(c == '0')
+        {
+            number+=0;
+        }
+    }
+    return number;
 }
 
 bool FileInput::completed()
@@ -57,20 +103,20 @@ void FileInput::Format()
     std::string temp = "";
     std::string formattedContent = "";
     cout << "Created variables" << endl;
+    cout << content << endl;
     for(char c : content)
     {
         if(c=='|')
         {
-            if(count == 0)
+            if(count == 1)
             {
-                cout<< temp << endl;
-                length = 5;
+                length = atoi(temp);
             }
-            else if(count == 1)
+            else if(count == 2)
             {
-                width = 7;
+                width = atoi(temp);
             }
-            else if(count > 2)
+            else
             {
                 temp += c;
                 formattedContent += temp;
