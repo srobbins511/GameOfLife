@@ -5,6 +5,8 @@
 
 using namespace std;
 
+//main method
+//calls the Game manager
 int main(int argc, char** argv)
 {
     std::string test = "";
@@ -12,4 +14,6 @@ int main(int argc, char** argv)
     cout << test << endl;
     GameManager *start = new GameManager();
     start -> play();
+    delete start;
+    return 0;
 }

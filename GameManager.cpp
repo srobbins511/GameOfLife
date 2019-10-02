@@ -7,6 +7,9 @@
 using namespace std;
 using namespace std::chrono_literals;
 
+//construct the game manager object
+//calls the user input method to determine if the users enter the correct input
+//if not exits
 GameManager::GameManager()
 {
     simCount = 0;
@@ -16,12 +19,15 @@ GameManager::GameManager()
     }
 }
 
+//destructo
 GameManager::~GameManager()
 {
     delete myGame;
     delete myFile;
 }
 
+//manages of the logic of how the game is simulated
+//what output is used is also controled by this
 void GameManager::play()
 {
     int count = 1;
@@ -63,6 +69,8 @@ void GameManager::play()
     }
 }
 
+//check to see if the grids have stabalized
+//if the grids are two similar too many times in a row, simulation ends
 bool GameManager::Similarity()
 {
     if(myGame->Compare())
@@ -81,7 +89,7 @@ bool GameManager::Similarity()
     return false;
 }
 
-
+//gets values needed by the user and insures that they are correct
 bool GameManager::getValues()
 {
     bool exit = false;
@@ -134,7 +142,7 @@ bool GameManager::getValues()
     }
 }
 
-
+//get the user input on how the game should be run and if the user provides a file it is read here
 bool GameManager::UserInput()
 {
     std::string temp = "";
@@ -178,7 +186,9 @@ bool GameManager::UserInput()
             {
                 cout << "enter the name of the file, if the file does not exist in the current directory enter the PATH with it: " << endl;
                 cin >> fname;
+                //opens and reads the file in the constructor of the FileInput Class
                 myFile = new FileInput(fname);
+                //checks to see if file was correctly read from
                 if(myFile->completed())
                 {
                     complete = true;
@@ -188,11 +198,8 @@ bool GameManager::UserInput()
                     return false;
                 }
             }
-            cout << "Formatting called" << endl;
             myFile->Format();
-            cout << "Formatting Finished" << endl;
             myGame = new Game(rules, myFile->getLength(), myFile->getWidth(), myFile->getContent());
-            cout << "Game Created" << endl;
             exit = true;;
         }
         else if(temp == "R" || temp == "r")

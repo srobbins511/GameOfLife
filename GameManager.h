@@ -9,6 +9,7 @@
 class GameManager
 {
     public:
+        //variables
         Game *myGame;
         int rules;
         int OutputCode;
@@ -19,8 +20,13 @@ class GameManager
         FileInput *myFile;
         std::string fname;
 
+        //constructor    
         GameManager();
+
+        //destructor
         ~GameManager();
+
+        //methods
         void play();
         bool Similarity();
         bool UserInput();

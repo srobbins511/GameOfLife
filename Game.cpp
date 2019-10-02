@@ -7,12 +7,9 @@
 // 2: Donut Mode
 
 
-//ToDO List
-//fix all the pointer errors when using getElems();
-//initialize the rest of the checking methods and their logic
-
 using namespace std;
 
+//generic base constructor
 Game::Game()
 {
     GenCount = 0;
@@ -23,6 +20,7 @@ Game::Game()
     nextBoard = new Board();
 }
 
+//constructor used when generating a game based on user command line input
 Game::Game(int rules, int gLen, int gWidth, double density)
 {
     GenCount = 0;
@@ -33,6 +31,7 @@ Game::Game(int rules, int gLen, int gWidth, double density)
     nextBoard = new Board(len, width);
 }
 
+//constructor used when generating a game based on a user provided file
 Game::Game(int rules, int gLen, int gWidth, std::string content)
 {
     GenCount = 0;
@@ -45,11 +44,14 @@ Game::Game(int rules, int gLen, int gWidth, std::string content)
     nextBoard = new Board(len, width);
 }
 
+//destructor
 Game::~Game()
 {
     delete gameBoard;
     delete nextBoard;
 }
+
+//check the survival of a unit based on its neighbors
 bool Game::CheckSurvival(int i, int j)
 {
     int neighborCount = 0;
@@ -59,6 +61,7 @@ bool Game::CheckSurvival(int i, int j)
     //false: it is a corner or edge
     bool PositionType = CheckPosition(i,j);
 
+    //the check method called is based on the mode user inputed
     switch(ruleCode)
     {
         case 0:
@@ -107,6 +110,7 @@ bool Game::CheckSurvival(int i, int j)
     return false;
 }
 
+//the check method for all values that do not reside on an edge of the grid
 int Game::StandardCheck(int i, int j)
 {
     int neighborCount = 0;
@@ -127,6 +131,7 @@ int Game::StandardCheck(int i, int j)
     return neighborCount;
 }
 
+//check to see where on the grid a given i,j value resides
 bool Game::CheckPosition(int i, int j)
 {
     bool posCode = false;
@@ -138,7 +143,7 @@ bool Game::CheckPosition(int i, int j)
 }
 
 
-//Logic to check to survival of locations at corners and edges in standard mode
+//Logic to check to survival of locations at corners and edges in classic mode
 int Game::ClassicCheck(int i, int j)
 {
     int neighborCount = 0;
@@ -146,12 +151,14 @@ int Game::ClassicCheck(int i, int j)
     {
         for(int l = -1; l<=1; ++l)
         {
+            //if a corner iterate over
             if( (k==0 && j==0) || ((i+k)<0) || ((i+k)>=len) || ((j+l)<0) || ((j+l)>=width))
             {
                 continue;
             }
             else if(gameBoard->getElem(i+k,j+l))
             {
+                //otherwise increment neighbor count
                 ++neighborCount;
             }
         }
@@ -159,9 +166,11 @@ int Game::ClassicCheck(int i, int j)
     return neighborCount;
 }
 
+//Logic to check to survival of locations at corners and edges in Mirro mode
 int Game::MirrorCheck(int i, int j)
 {
     int neighborCount = 0;
+    //check to see if the given element is a corner
     if( (i == 0 && j ==0 ) || (i==0 && j == width-1) || (i == len-1 && j ==0) || (i ==len-1 && j == width-1) )
     {
         if(gameBoard->getElem(i,j))
@@ -169,27 +178,33 @@ int Game::MirrorCheck(int i, int j)
             neighborCount+=3;
         }                
     }
+    //loop through all the neighbors
     for(int k = -1; k<=1; ++k)
     {
         for(int l = -1; l<=1; ++l)
         {
+            //if a corner iterate past
             if((k==0 && j==0) || ((i+k)<0) || ((i+k)>=len) || ((j+l)<0) || ((j+l)>=width))
             {
                 continue;
             }
+            //otherwise check the element
             if(gameBoard->getElem(i+k,j+l))
             {
+                //if on an edge count twice
                 if(i+k == 0 || i+k == len-1 || j+l == 0 || j+l == width-1)
                 {
                     neighborCount+=2;
                 }
                 else
                 {
+                    //otherwise increment once
                     ++neighborCount;
                 }
             }
         }
     }
+    //return the number of neighbors
     return neighborCount;
 }
 
@@ -201,12 +216,14 @@ int Game::DonutCheck(int i, int j)
     {
         for(int l = -1; l<=1; ++l)
         {
+            //if given value iterate past
             if((k==0 && j==0)) 
             {
                 continue;
             }
             if( ((i+k)<0) || ((i+k)>=len) || ((j+l)<0) || ((j+l)>=width) )
             {
+                //if on edge flip values that lie past edge to other edges of grid
                 if(gameBoard->getElem(flipPosI(i+k), flipPosJ(j+l)) )
                 {
                     ++neighborCount;
@@ -221,6 +238,7 @@ int Game::DonutCheck(int i, int j)
     return neighborCount;
 }
 
+//if the given i value would refer to a value off the grid, flip it to refer to the last value on the opposite side
 int Game::flipPosI(int posi)
 {
     int i = posi;
@@ -234,6 +252,7 @@ int Game::flipPosI(int posi)
     return i;
 }
 
+//if the given j value refers to a location off the grid, flip it to refer to the last value on the opposite side
 int Game::flipPosJ(int posj)
 {
     int j = posj;
@@ -247,6 +266,7 @@ int Game::flipPosJ(int posj)
     return j;
 }
 
+//simulate the results of one generation passing
 void Game::NextGeneration()
 {
     nextBoard = new Board(gameBoard);
@@ -257,16 +277,20 @@ void Game::NextGeneration()
             nextBoard->Set(i,j,CheckSurvival(i,j));
         }
     }
+    //flip the positions of the two boards
     Board *temp = gameBoard;
     gameBoard = nextBoard;
     nextBoard = temp;
 }
 
+//print out the current game board that is active
 std::string Game::printBoard()
 {
     return gameBoard->printBoard();
 }
 
+// compare the two boards together
+//used to determine of the grids are stabalizing at specific patterns
 bool Game::Compare()
 {
     bool same = true;

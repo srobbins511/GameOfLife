@@ -4,6 +4,7 @@
 #include <math.h>
 using namespace std;
 
+//file to read from a user given file
 FileInput::FileInput(std::string fname)
 {
     length = -1;
@@ -27,6 +28,7 @@ FileInput::FileInput(std::string fname)
     success = true;
 }
 
+//parse an int value to determine dimensions of the grid defined by the user
 int FileInput::atoi(std::string num)
 {
     int number = 0;
@@ -77,6 +79,7 @@ int FileInput::atoi(std::string num)
     return number;
 }
 
+//check to see if the file has been successfully read from
 bool FileInput::completed()
 {
     int count = 0;
@@ -96,6 +99,7 @@ bool FileInput::completed()
     return success;
 }
 
+//format the information recieved from the file into the form that the other methods in the program can read
 void FileInput::Format()
 {
     cout << "Created variables started" << endl;
@@ -133,16 +137,19 @@ void FileInput::Format()
     content = formattedContent;
 }
 
+//return the length of the grid given
 int FileInput::getLength()
 {
     return length;
 }
 
+//return the width of the grid given
 int FileInput::getWidth()
 {
     return width;
 }
 
+//return the formatted string that represents all the values in the graph
 std::string FileInput::getContent()
 {
     return content;

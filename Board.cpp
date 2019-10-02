@@ -3,7 +3,7 @@
 
 using namespace std;
 
-
+//default board
 Board::Board()
 {
     myArr = new char*[10];
@@ -16,6 +16,7 @@ Board::Board()
     numElems = len*width;
 }
 
+//create a board object based on given dimensions and density
 Board::Board(int gLen, int gWidth, double density)
 {
     len = gLen;
@@ -26,7 +27,6 @@ Board::Board(int gLen, int gWidth, double density)
     {
         myArr[i] = new char[width];
     }
-    //Code how to use density to create a random distribution of living locations
     for(int i = 0; i< len; ++i)
     {
         for(int j = 0; j < width; ++j)
@@ -43,6 +43,7 @@ Board::Board(int gLen, int gWidth, double density)
     }
 }
 
+//create a bboard object based on given dimensions and a string formated to represent a board
 Board::Board(int gLen, int gWidth, std::string content)
 {
     len = gLen;
@@ -73,6 +74,7 @@ Board::Board(int gLen, int gWidth, std::string content)
     }
 }
 
+//create a board based on given dimensions
 Board::Board(int gLen, int gWidth)
 {
     cout << "entered second game board constructor" << endl;
@@ -87,6 +89,8 @@ Board::Board(int gLen, int gWidth)
     }
 }
 
+//create a board based on a given board
+//copy constructor
 Board::Board(Board* startBoard)
 {
     len = startBoard->len;
@@ -106,6 +110,7 @@ Board::Board(Board* startBoard)
     }
 }
 
+//destructor
 Board::~Board()
 {
     for(int i=0; i<len; ++i)
@@ -125,6 +130,7 @@ bool Board::getElem(int i, int j)
     return false;
 }
 
+//check to see if a board only has dead elements
 bool Board::isEmpty()
 {
     for(int i = 0; i < len; ++i)
@@ -140,6 +146,7 @@ bool Board::isEmpty()
     return true;
 }
 
+//set a value on the board to a given value
 void Board::Set(int i, int j, bool state)
 {
     if(state)
@@ -152,16 +159,19 @@ void Board::Set(int i, int j, bool state)
     }
 }
 
+//return the length 
 int Board::getLen()
 {
     return len;
 }
 
+//return the width
 int Board::getWidth()
 {
     return width;
 }
 
+//return a string representation of the board
 std::string Board::printBoard()
 {
     std::string temp = "";
